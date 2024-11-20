@@ -1,7 +1,7 @@
 import { imgPath } from "@/components/helpers/functions-general";
 import React from "react";
 
-const SideNav = () => {
+const SideNav = ({setCategory}) => {
   const menus = [
     {
       img: "nav-value-meal.webp",
@@ -9,11 +9,11 @@ const SideNav = () => {
     },
     {
       img: "nav-chickenjoy.jpg",
-      title: "Chicken Joy",
+      title: "Chickenjoy",
     },
     {
       img: "nav-burger-steak.webp",
-      title: "Burger steak",
+      title: "Burger Steak",
     },
     {
       img: "nav-spaghetti.webp",
@@ -37,19 +37,23 @@ const SideNav = () => {
       title: "Sides",
     },
   ];
+
+  const handleGetCategory = (category) => {
+      setCategory(category)
+  }
   return (
     <>
       <h5 className="mb-0 text-center pt-2 text-sm">Menu</h5>
 
       <ul>
-        {menus.map((item,key)=>(
-            <li className="mb-3">
-          <button>
-            <img src={`${imgPath}/${item.img}`} alt="" />
-            <small className="text-xs">{item.title}</small>
-          </button>
-        </li>))}
-        
+        {menus.map((item, key) => (
+          <li className="mb-3" key={key}>
+            <button onClick={() => handleGetCategory(item.title)}>
+              <img src={`${imgPath}/${item.img}`} alt="" />
+              <small className="text-xs">{item.title}</small>
+            </button>
+          </li>
+        ))}
       </ul>
     </>
   );
