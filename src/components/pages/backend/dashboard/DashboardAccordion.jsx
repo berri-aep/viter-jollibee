@@ -25,8 +25,8 @@ const DashboardAccordion = ({ title, filterby }) => {
           />
         </div>
         <div
-          className={`accordion-body border border-line rounded-b-md border-t-0 overflow-hidden max-h-[600px] h-full transition-all duration-500  ${
-            isOpen ? "max-h-[600px] transition-all duration-500 " : "max-h-0"
+          className={`accordion-body border border-line rounded-b-md border-t-0 overflow-hidden max-h-0 h-full transition-all duration-500  ${
+            isOpen ? "max-h-[600px] " : "max-h-0"
           }`}
         >
           <ul className="space-y-3 py-4 px-2">
