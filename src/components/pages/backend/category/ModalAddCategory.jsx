@@ -2,27 +2,67 @@ import React from "react";
 import ModalWrapper from "../partials/Modals/ModalWrapper";
 import { ImagePlusIcon, X } from "lucide-react";
 import SpinnerButton from "../partials/spinners/SpinnerButton";
-import { setIsAdd } from "@/components/store/storeAction";
+import {
+  setError,
+  setIsAdd,
+  setMessage,
+  setSuccess,
+} from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
 import { Form, Formik } from "formik";
 import * as Yup from "Yup";
 import { InputPhotoUpload, InputText } from "@/components/helpers/FormInputs";
 import useUploadPhoto from "@/components/custom-hook/useUploadPhoto";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryData } from "@/components/helpers/queryData";
 
-const ModalAddCategory = () => {
+const ModalAddCategory = ({ isCategoryEdit, setIsCategoryEdit }) => {
   const { dispatch, store } = React.useContext(StoreContext);
   const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("");
+  const [value, setValue] = React.useState("");
 
   const handleClose = () => {
     dispatch(setIsAdd(false));
   };
 
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (values) =>
+      queryData(
+        isCategoryEdit
+          ? `/v2/category/${isCategoryEdit.category_aid}`
+          : "/v2/category",
+        isCategoryEdit ? "PUT" : "POST",
+        values
+      ),
+    onSuccess: (data) => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["category"] });
+
+      // show error box
+      if (!data.success) {
+        dispatch(setError(true));
+        dispatch(setMessage(data.error));
+        dispatch(setSuccess(false));
+      } else {
+        console.log("Success");
+        dispatch(setIsAdd(false));
+        dispatch(setSuccess(true));
+        dispatch(setMessage("Successful!"));
+      }
+    },
+  });
+
   const initVal = {
-    Category_title: "",
+    category_title: isCategoryEdit ? isCategoryEdit.category_title : "",
   };
 
   const yupSchema = Yup.object({
-    Category_title: Yup.string().required("* Required"),
+    category_title: Yup.string().required("* Required"),
   });
   return (
     <>
@@ -37,8 +77,9 @@ const ModalAddCategory = () => {
           <Formik
             initialValues={initVal}
             validationSchema={yupSchema}
-            onSubmit={async (values) => {
-              console.log(values);
+            onSubmit={async (values, { setSubmitting, resetForm }) => {
+              // mutate data
+              mutation.mutate(values);
             }}
           >
             {(props) => {
@@ -50,10 +91,11 @@ const ModalAddCategory = () => {
                         <InputText
                           label="Title"
                           type="text"
-                          name="Category_title"
+                          name="category_title"
+                          onChange={handleChange}
                         />
                       </div>
-                      <div className="input-wrap relative  group input-photo-wrap h-[150px] ">
+                      {/* <div className="input-wrap relative  group input-photo-wrap h-[150px] ">
                         <label htmlFor="">Photo</label>
                         {photo === null ? (
                           <div className="w-full border border-line rounded-md flex justify-center items-center flex-col h-full">
@@ -87,7 +129,7 @@ const ModalAddCategory = () => {
                           onDrop={(e) => handleChangePhoto(e)}
                           className={`opacity-0 absolute top-0 right-0 bottom-0 left-0 rounded-full  m-auto cursor-pointer w-full h-full`}
                         />
-                      </div>
+                      </div> */}
                     </div>
                     <div className="form-action flex p-4 justify-end gap-5">
                       <button className="btn btn-accent" type="submit">

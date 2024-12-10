@@ -13,8 +13,9 @@ import ModalDelete from "../partials/Modals/ModalDelete";
 import Pills from "../partials/Pills";
 import { StoreContext } from "@/components/store/storeContext";
 import { menus } from "../menu-data";
+import useQueryData from "@/components/custom-hook/useQueryData";
 
-const FoodsTable = ({setItemEdit}) => {
+const FoodsTable = ({ setItemEdit }) => {
   const { store, dispatch } = React.useContext(StoreContext);
   let counter = 1;
 
@@ -31,6 +32,18 @@ const FoodsTable = ({setItemEdit}) => {
   const handleArchive = () => {
     dispatch(setIsArchive(true));
   };
+
+  const {
+    isFetching,
+    error,
+    data: result,
+    status,
+  } = useQueryData(
+    `/v2/food`, //endpoint
+    "get", //method
+    "food" //key
+  );
+
   return (
     <>
       <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
@@ -60,62 +73,69 @@ const FoodsTable = ({setItemEdit}) => {
               </td>
             </tr> */}
 
-              {menus.map((item,key) => (
+              {result?.count > 0 &&
 
-                <tr key={key}>
-                  <td>{counter++}.</td>
-                  <td>
-                    <Pills />
-                  </td>
-                  <td>{item.menu_title}</td>
-                  <td>{item.menu_price}</td>
-                  <td>{item.menu_category}</td>
-                  <td>
-                    <ul className="table-action">
-                      {true ? (
-                        <>
-                          <li>
-                            <button
-                              className="tooltip"
-                              data-tooltip="Edit"
-                              onClick={() => handleEdit(item)}
-                            >
-                              <FilePenLine />
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="tooltip"
-                              data-tooltip="Archive"
-                              onClick={handleArchive}
-                            >
-                              <Archive />
-                            </button>
-                          </li>
-                        </>
-                      ) : (
-                        <>
-                          <li>
-                            <button className="tooltip" data-tooltip="Restore">
-                              <ArchiveRestore onClick={() => handleRestore()} />
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="tooltip"
-                              data-tooltip="Delete"
-                              onClick={handleDelete}
-                            >
-                              <Trash2 />
-                            </button>
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                  </td>
-                </tr>
-              ))}
+
               
+                result.data.map((item, key) => (
+                  <tr key={key}>
+                    <td>{counter++}.</td>
+                    <td>
+                      <Pills />
+                    </td>
+                    <td>{item.food_title}</td>
+                    <td>{item.food_price}</td>
+                    <td>{item.category_title}</td>
+                    <td>
+                      <ul className="table-action">
+                        {true ? (
+                          <>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Edit"
+                                onClick={() => handleEdit(item)}
+                              >
+                                <FilePenLine />
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Archive"
+                                onClick={handleArchive}
+                              >
+                                <Archive />
+                              </button>
+                            </li>
+                          </>
+                        ) : (
+                          <>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Restore"
+                              >
+                                <ArchiveRestore
+                                  onClick={() => handleRestore()}
+                                />
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Delete"
+                                onClick={handleDelete}
+                              >
+                                <Trash2 />
+                              </button>
+                            </li>
+                          </>
+                        )}
+                      </ul>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
 

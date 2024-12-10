@@ -14,6 +14,8 @@ import ModalValidation from '../partials/Modals/ModalValidation';
 
 const Category = () => {
 const { dispatch, store } = React.useContext(StoreContext);
+const [isCategoryEdit,setIsCategoryEdit] = React.useState(null);
+
 const handleAdd = () => {
   dispatch(setIsAdd(true));
 };
@@ -23,18 +25,18 @@ const handleAdd = () => {
         <div className="layout-div">
           <SideNavigation menu="category" />
           <main>
-            <Header
-              title="Category"
-              subtitle="Manage Kiosk Category"
-            />
+            <Header title="Category" subtitle="Manage Kiosk Category" />
             <div className="p-5">
               <div className="flex justify-between items-center">
                 <SearchBar />
-                <button className="btn btn-add" onClick={handleAdd}>
+                <button className="btn btn-add" type="reset" onClick={handleAdd}>
                   <Plus size={16} /> Add New
                 </button>
               </div>
-              <CategoryTable />
+              <CategoryTable
+                isCategoryEdit={isCategoryEdit}
+                setIsCategoryEdit={setIsCategoryEdit}
+              />
             </div>
 
             <Footer />
@@ -44,7 +46,12 @@ const handleAdd = () => {
       {store.validate && <ModalValidation />}
       {store.error && <ModalError />}
       {store.success && <ToastSuccess />}
-      {store.isAdd && <ModalAddCategory />}
+      {store.isAdd && (
+        <ModalAddCategory
+          isCategoryEdit={isCategoryEdit}
+          setIsCategoryEdit={setIsCategoryEdit}
+        />
+      )}
     </>
   );
 }

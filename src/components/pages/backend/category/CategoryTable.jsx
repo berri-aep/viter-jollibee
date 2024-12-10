@@ -9,27 +9,48 @@ import {
 import React from "react";
 import LoadMore from "../partials/LoadMore";
 import ModalConfirm from "../partials/Modals/ModalConfirm";
-import ModalDelete from "../partials/Modals/ModalDelete";
 import Pills from "../partials/Pills";
 import { StoreContext } from "@/components/store/storeContext";
+import useQueryData from "@/components/custom-hook/useQueryData";
+import Status from "@/components/partials/Status";
+import ModalRestore from "@/components/partials/modal/ModalRestore";
+import ModalArchive from "@/components/partials/modal/ModalArchive";
+import ModalDelete from "@/components/partials/modal/ModalDelete";
 
-const CategoryTable = () => {
-  const{store,dispatch} = React.useContext(StoreContext);
+
+const CategoryTable = ({ setIsCategoryEdit }) => {
+  const [id, setIsId] = React.useState("");
+  const { store, dispatch } = React.useContext(StoreContext);
   let counter = 1;
-  
 
-  const handleDelete = () => {
+  const handleDelete = (item) => {
     dispatch(setIsDelete(true));
+    setIsId(item.category_aid);
   };
-  const handleEdit = () => {
+  const handleEdit = (item) => {
     dispatch(setIsAdd(true));
+    setIsCategoryEdit(item);
   };
-  const handleRestore = () => {
+  const handleRestore = (item) => {
     dispatch(setIsRestore(true));
+    setIsId(item.category_aid);
   };
-  const handleArchive = () => {
+  const handleArchive = (item) => {
     dispatch(setIsArchive(true));
+    setIsId(item.category_aid);
   };
+
+  const {
+    isFetching,
+    error,
+    data: result,
+    status,
+  } = useQueryData(
+    `/v2/category`, //endpoint
+    "get", //method
+    "category" //key
+  );
+  
   return (
     <>
       <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
@@ -57,59 +78,68 @@ const CategoryTable = () => {
               </td>
             </tr> */}
 
-              {Array.from(Array(6).keys()).map((i)=>(
-
-              <tr key={i}>
-                <td>{counter++}.</td>
-                <td>
-                  <Pills />
-                </td>
-                <td>category1</td>
-                <td>
-                  <ul className="table-action">
-                    {true ? (
-                      <>
-                        <li>
-                          <button
-                            className="tooltip"
-                            data-tooltip="Edit"
-                            onClick={() => handleEdit()}
-                          >
-                            <FilePenLine />
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="tooltip"
-                            data-tooltip="Archive"
-                            onClick={handleArchive}
-                          >
-                            <Archive />
-                          </button>
-                        </li>
-                      </>
-                    ) : (
-                      <>
-                        <li>
-                          <button className="tooltip" data-tooltip="Restore">
-                            <ArchiveRestore onClick={() => handleRestore()} />
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="tooltip"
-                            data-tooltip="Delete"
-                            onClick={handleDelete}
-                          >
-                            <Trash2 />
-                          </button>
-                        </li>
-                      </>
-                    )}
-                  </ul>
-                </td>
-              </tr>
-              ))}
+              {result?.count > 0 &&
+                result.data.map((item, key) => (
+                  <tr key={key}>
+                    <td>{counter++}.</td>
+                    <td>
+                      {item.category_is_active === 1 ? (
+                        <Status text="Active" />
+                      ) : (
+                        <Status text="inactive" />
+                      )}
+                    </td>
+                    <td>{item.category_title}</td>
+                    <td>
+                      <ul className="table-action">
+                        {item.category_is_active === 1 ? (
+                          <>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Edit"
+                                onClick={() => handleEdit(item)}
+                              >
+                                <FilePenLine />
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Archive"
+                                onClick={() => handleArchive(item)}
+                              >
+                                <Archive />
+                              </button>
+                            </li>
+                          </>
+                        ) : (
+                          <>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Restore"
+                              >
+                                <ArchiveRestore
+                                  onClick={() => handleRestore(item)}
+                                />
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Delete"
+                                onClick={() => handleDelete(item)}
+                              >
+                                <Trash2 />
+                              </button>
+                            </li>
+                          </>
+                        )}
+                      </ul>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
 
@@ -117,9 +147,27 @@ const CategoryTable = () => {
         </div>
       </div>
 
-      {store.isDelete && <ModalDelete />}
-      {store.isRestore && <ModalConfirm />}
-      {store.isArchive && <ModalConfirm />}
+      {store.isDelete && (
+        <ModalDelete
+          setIsDelete={setIsDelete}
+          mysqlApiDelete={`/v2/category/${id}`}
+          queryKey={"category"}
+        />
+      )}
+      {store.isRestore && (
+        <ModalRestore
+          setIsRestore={setIsRestore}
+          mysqlEndpoint={`/v2/category/active/${id}`}
+          queryKey={"category"}
+        />
+      )}
+      {store.isArchive && (
+        <ModalArchive
+          setIsArchive={setIsArchive}
+          mysqlEndpoint={`/v2/category/active/${id}`}
+          queryKey={"category"}
+        />
+      )}
     </>
   );
 };
