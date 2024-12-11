@@ -63,6 +63,7 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
                 <th>#</th>
                 <th>Status</th>
                 <th>Title</th>
+                <th>Image Name</th>
                 <th></th>
               </tr>
             </thead>
@@ -84,12 +85,13 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
                     <td>{counter++}.</td>
                     <td>
                       {item.category_is_active === 1 ? (
-                        <Status text="Active" />
+                        <Pills text="Active" />
                       ) : (
-                        <Status text="inactive" />
+                        <Pills text="inActive" />
                       )}
                     </td>
                     <td>{item.category_title}</td>
+                    <td>{item.category_image}</td>
                     <td>
                       <ul className="table-action">
                         {item.category_is_active === 1 ? (

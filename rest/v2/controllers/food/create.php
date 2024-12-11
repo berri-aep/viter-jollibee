@@ -3,20 +3,23 @@
 $conn = null;
 $conn = checkDbConnection();
 // make instance of classes
-$category = new Category($conn);
+$food = new Food($conn);
 // get should not be present
 
 // check data
 checkPayload($data);
 // get data
-$category->category_is_active = 1;
-$category->category_title = checkIndex($data, "category_title");
-$category->category_created = date("Y-m-d H:i:s");
-$category->category_datetime = date("Y-m-d H:i:s");
+$food->food_is_active = 1;
+$food->food_image = checkIndex($data, "food_image");
+$food->food_title = checkIndex($data, "food_title");
+$food->food_price = checkIndex($data, "food_price");
+$food->food_category_id = checkIndex($data, "food_category_id");
+$food->food_created = date("Y-m-d H:i:s");
+$food->food_datetime = date("Y-m-d H:i:s");
 
 //checks newly added data if it already exists
-// isNameExist($category, $category->category_name);
+// isNameExist($food, $food->food_name);
 
-$query = checkCreate($category);
+$query = checkCreate($food);
 
-returnSuccess($category, "category", $query);
+returnSuccess($food, "food", $query);

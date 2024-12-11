@@ -12,7 +12,7 @@ class Food
     public $food_datetime;
     public $food_created;
 
-        public $category_aid;
+      public $category_aid;
     public $category_is_active;
     public $category_title;
     public $category_datetime;
@@ -96,21 +96,30 @@ class Food
       public function create()
   {
     try {
-      $sql = "insert into {$this->tblCategory} ";
-      $sql .= "(category_is_active, ";
-      $sql .= "category_title, ";
-      $sql .= "category_created, ";
-      $sql .= "category_datetime ) values ( ";
-      $sql .= ":category_is_active, ";
-      $sql .= ":category_title, ";
-      $sql .= ":category_created, ";
-      $sql .= ":category_datetime ) ";
+      $sql = "insert into {$this->tblFood} ";
+      $sql .= "(food_is_active, ";
+      $sql .= "food_image, ";
+      $sql .= "food_title, ";
+      $sql .= "food_price, ";
+      $sql .= "food_category_id, ";
+      $sql .= "food_created, ";
+      $sql .= "food_datetime ) values ( ";
+      $sql .= ":food_is_active, ";
+      $sql .= ":food_image, ";
+      $sql .= ":food_title, ";
+      $sql .= ":food_price, ";
+      $sql .= ":food_category_id, ";
+      $sql .= ":food_created, ";
+      $sql .= ":food_datetime ) ";
       $query = $this->connection->prepare($sql);
       $query->execute([
-        "category_is_active" => $this->category_is_active,
-        "category_title" => $this->category_title,
-        "category_datetime" => $this->category_datetime,
-        "category_created" => $this->category_created,
+        "food_is_active" => $this->food_is_active,
+        "food_image" => $this->food_image,
+        "food_title" => $this->food_title,
+        "food_price" => $this->food_price,
+        "food_category_id" => $this->food_category_id,
+        "food_datetime" => $this->food_datetime,
+        "food_created" => $this->food_created,
 
 
       ]);
@@ -141,15 +150,21 @@ class Food
   public function update()
   {
     try {
-      $sql = "update {$this->tblCategory} set ";
-      $sql .= "category_title = :category_title, ";
-      $sql .= "category_datetime = :category_datetime ";
-      $sql .= "where category_aid  = :category_aid ";
+      $sql = "update {$this->tblFood} set ";
+      $sql .= "food_image = :food_image, ";
+      $sql .= "food_title = :food_title, ";
+      $sql .= "food_price = :food_price, ";
+      $sql .= "food_category_id = :food_category_id, ";
+      $sql .= "food_datetime = :food_datetime ";
+      $sql .= "where food_aid  = :food_aid ";
       $query = $this->connection->prepare($sql);
       $query->execute([
-        "category_title" => $this->category_title,
-        "category_datetime" => $this->category_datetime,
-        "category_aid" => $this->category_aid
+        "food_image" => $this->food_image,
+        "food_title" => $this->food_title,
+        "food_price" => $this->food_price,
+        "food_category_id" => $this->food_category_id,
+        "food_datetime" => $this->food_datetime,
+        "food_aid" => $this->food_aid
       ]);
     } catch (PDOException $ex) {
       $query = false;
@@ -161,11 +176,11 @@ class Food
   public function delete()
   {
     try {
-      $sql = "delete from {$this->tblCategory} ";
-      $sql .= "where category_aid = :category_aid ";
+      $sql = "delete from {$this->tblFood} ";
+      $sql .= "where food_aid = :food_aid ";
       $query = $this->connection->prepare($sql);
       $query->execute([
-        "category_aid" => $this->category_aid,
+        "food_aid" => $this->food_aid,
       ]);
     } catch (PDOException $ex) {
       $query = false;
@@ -177,15 +192,15 @@ class Food
   public function active()
     {
     try {
-    $sql = "update {$this->tblCategory} set ";
-    $sql .= "category_is_active = :category_is_active, ";
-    $sql .= "category_datetime = :category_datetime ";
-    $sql .= "where category_aid  = :category_aid ";
+    $sql = "update {$this->tblFood} set ";
+    $sql .= "food_is_active = :food_is_active, ";
+    $sql .= "food_datetime = :food_datetime ";
+    $sql .= "where food_aid  = :food_aid ";
     $query = $this->connection->prepare($sql);
     $query->execute([
-    "category_is_active" => $this->category_is_active,
-    "category_datetime" => $this->category_datetime,
-    "category_aid" => $this->category_aid,
+    "food_is_active" => $this->food_is_active,
+    "food_datetime" => $this->food_datetime,
+    "food_aid" => $this->food_aid,
     ]);
     } catch (PDOException $ex) {
     $query = false;

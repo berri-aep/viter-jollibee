@@ -3,28 +3,31 @@
 $conn = null;
 $conn = checkDbConnection();
 // make instance of classes
-$category = new Category($conn);
+$food = new Food($conn);
 // get $_GET data
 $error = [];
 $returnData = [];
-if (array_key_exists("categoryid", $_GET)) {
+if (array_key_exists("foodid", $_GET)) {
   // check data
   checkPayload($data);
   // get data
-  $category->category_aid = $_GET['categoryid'];
-  $category->category_title = checkIndex($data, "category_title");
-  $category->category_created = date("Y-m-d H:i:s");
-  $category->category_datetime = date("Y-m-d H:i:s");
-  checkId($category->category_aid);
+  $food->food_aid = $_GET['foodid'];
+  $food->food_image = checkIndex($data, "food_image");
+  $food->food_title = checkIndex($data, "food_title");
+  $food->food_price = checkIndex($data, "food_price");
+  $food->food_category_id = checkIndex($data, "food_category_id");
+  $food->food_created = date("Y-m-d H:i:s");
+  $food->food_datetime = date("Y-m-d H:i:s");
+  checkId($food->food_aid);
 
 //checks current data to avoid same entries from being updated
-// $category_name_old = checkIndex($data, 'category_name_old');
-// compareName($category, $category_name_old, $category->category_name);
-// checkId($category->category_aid);
+// $food_name_old = checkIndex($data, 'food_name_old');
+// compareName($food, $food_name_old, $food->food_name);
+// checkId($food->food_aid);
 
   // update
-  $query = checkUpdate($category);
-  returnSuccess($category, "category", $query);
+  $query = checkUpdate($food);
+  returnSuccess($food, "food", $query);
 }
 
 // return 404 error if endpoint not available

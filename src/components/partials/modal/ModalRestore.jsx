@@ -7,7 +7,7 @@ import ButtonSpinner from "../spinner/ButtonSpinner";
 import { StoreContext } from "@/components/store/storeContext";
 import { setIsRestore } from "@/components/store/storeAction";
 import ModalWrapper from "@/components/pages/backend/partials/Modals/ModalWrapper";
-import { Trash2, X } from "lucide-react";
+import { ArchiveRestore, Trash2, X } from "lucide-react";
 
 const ModalRestore = ({ setIsArchive, mysqlEndpoint, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext);
@@ -46,8 +46,8 @@ const ModalRestore = ({ setIsArchive, mysqlEndpoint, queryKey, item }) => {
       <ModalWrapper>
         <div className="modal-main bg-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[400px] w-full rounded-md border border-line">
           <div className="modal-header flex gap-2 p-2 items-center border-b border-line mb-2">
-            <Trash2 size={16} stroke="yellow" />{" "}
-            <span className="text-warning">Archive</span>
+            <ArchiveRestore size={16} stroke="yellow" />{" "}
+            <span className="text-warning">Restore</span>
             <button className="ml-auto" onClick={handleClose}>
               <X />
             </button>
