@@ -65,6 +65,7 @@ const FoodsTable = ({ setItemEdit }) => {
                 <th>Title</th>
                 <th>Price</th>
                 <th>Category</th>
+                <th>Image Name</th>
                 <th></th>
               </tr>
             </thead>
@@ -94,6 +95,7 @@ const FoodsTable = ({ setItemEdit }) => {
                     <td>{item.food_title}</td>
                     <td>{item.food_price}</td>
                     <td>{item.category_title}</td>
+                    <td>{item.food_image}</td>
                     <td>
                       <ul className="table-action">
                         {item.food_is_active ? (

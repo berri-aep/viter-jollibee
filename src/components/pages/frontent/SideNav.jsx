@@ -3,8 +3,8 @@ import { imgPath } from "@/components/helpers/functions-general";
 import React from "react";
 
 const SideNav = ({setCategory}) => {
-  const handleGetCategory = (category) => {
-    setCategory(category)
+  const handleGetCategory = (item) => {
+    setCategory(item)
   }
 
   const {
@@ -26,7 +26,7 @@ const SideNav = ({setCategory}) => {
         {result?.count > 0 &&
         result.data.map((item, key) => (
           <li className="mb-3" key={key}>
-            <button onClick={() => handleGetCategory(item.category_title)}>
+            <button onClick={() => handleGetCategory(item)}>
               <img src={`${imgPath}/${item.category_image}`} alt="" />
               <small className="text-xs">{item.category_title}</small>
             </button>
