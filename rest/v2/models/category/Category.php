@@ -108,20 +108,20 @@ class Category
   }
 
 
-  public function checkName()
-  {
-    try {
-      $sql = "select other_name from {$this->tblOther} ";
-      $sql .= "where other_name = :other_name ";
-      $query = $this->connection->prepare($sql);
-      $query->execute([
-        "other_name" => "{$this->other_name}",
-      ]);
-    } catch (PDOException $ex) {
-      $query = false;
-    }
-    return $query;
-  }
+  // public function checkName()
+  // {
+  //   try {
+  //     $sql = "select category_name from {$this->tblCategory} ";
+  //     $sql .= "where category_name = :category_name ";
+  //     $query = $this->connection->prepare($sql);
+  //     $query->execute([
+  //       "category_name" => "{$this->category_name}",
+  //     ]);
+  //   } catch (PDOException $ex) {
+  //     $query = false;
+  //   }
+  //   return $query;
+  // }
 
 
   public function update()

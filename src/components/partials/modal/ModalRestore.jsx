@@ -1,15 +1,12 @@
 import { queryData } from "@/components/helpers/queryData";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React from "react";
-import { FaTrashRestore } from "react-icons/fa";
-import { GrFormClose } from "react-icons/gr";
-import ButtonSpinner from "../spinner/ButtonSpinner";
-import { StoreContext } from "@/components/store/storeContext";
-import { setIsRestore } from "@/components/store/storeAction";
 import ModalWrapper from "@/components/pages/backend/partials/Modals/ModalWrapper";
-import { ArchiveRestore, Trash2, X } from "lucide-react";
+import { setError, setMessage, setSuccess } from "@/components/store/storeAction";
+import { StoreContext } from "@/components/store/storeContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ArchiveRestore, X } from "lucide-react";
+import React from "react";
 
-const ModalRestore = ({ setIsArchive, mysqlEndpoint, queryKey, item }) => {
+const ModalRestore = ({ setIsRestore, mysqlEndpoint, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext);
   const handleClose = () => {
     dispatch(setIsRestore(false));
@@ -25,12 +22,13 @@ const ModalRestore = ({ setIsArchive, mysqlEndpoint, queryKey, item }) => {
       // dispatch(setIsDelete(false));
 
       if (!data.success) {
+        dispatch(setError(true));
+        dispatch(setMessage(data.error));
         console.log("May error!");
       } else {
         dispatch(setIsRestore(false));
         dispatch(setSuccess(true));
-        console.log("Naysuu!");
-        
+        dispatch(setMessage("restored"));
       }
     },
   });

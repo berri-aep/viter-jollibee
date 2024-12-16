@@ -13,6 +13,7 @@ import { StoreContext } from "@/components/store/storeContext";
 import ModalWrapper from "@/components/pages/backend/partials/Modals/ModalWrapper";
 import { Archive, X } from "lucide-react";
 import SpinnerButton from "@/components/pages/backend/partials/spinners/SpinnerButton";
+import { setMessage, setSuccess } from "@/components/store/storeAction";
 
 const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext
@@ -36,7 +37,7 @@ const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
         setIsDelete(false);
         console.log("Naysuu!");
         dispatch(setSuccess(true));
-        dispatch(setMessage(successMsg));
+        dispatch(setMessage("deleted"));
       }
     },
   });
@@ -64,7 +65,7 @@ const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
 
           <div className="flex justify-end gap-3 mt-5">
             <button className="btn btn-alert" onClick={handleYes}>
-              <SpinnerButton /> Delete
+              {mutation.isPending ? <SpinnerButton /> : "Delete"}
             </button>
             <button className="btn btn-cancel" onClick={handleClose}>
               Cancel

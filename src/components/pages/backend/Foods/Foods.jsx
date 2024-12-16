@@ -11,6 +11,7 @@ import SideNavigation from "../partials/SideNavigation";
 import ToastSuccess from "../partials/ToastSuccess";
 import FoodsTable from "./FoodsTable";
 import ModalAddFood from "./ModalAddFood";
+import { FaPlus } from "react-icons/fa";
 
 const Foods = () => {
   const { dispatch, store } = React.useContext(StoreContext);

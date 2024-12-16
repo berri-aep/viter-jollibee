@@ -7,6 +7,7 @@ import ButtonSpinner from "../spinner/ButtonSpinner";
 import { StoreContext } from "@/components/store/storeContext";
 import ModalWrapper from "@/components/pages/backend/partials/Modals/ModalWrapper";
 import { Archive, Trash2, X } from "lucide-react";
+import { setError, setMessage, setSuccess } from "@/components/store/storeAction";
 
 const ModalArchive = ({ setIsArchive, mysqlEndpoint, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext);
@@ -24,10 +25,13 @@ const ModalArchive = ({ setIsArchive, mysqlEndpoint, queryKey, item }) => {
       // dispatch(setIsDelete(false));
 
       if (!data.success) {
+        dispatch(setError(true));
+        dispatch(setMessage(data.error));
         console.log("May error!");
       } else {
         dispatch(setIsArchive(false));
-        console.log("Naysuu!");
+        dispatch(setSuccess(true));
+        dispatch(setMessage("archived"));
       }
     },
   });
