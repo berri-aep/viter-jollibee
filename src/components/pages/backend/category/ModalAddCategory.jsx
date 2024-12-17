@@ -125,7 +125,6 @@ const ModalAddCategory = ({ isCategoryEdit, setIsCategoryEdit }) => {
                               photo
                                 ? URL.createObjectURL(photo) // preview
                                 : imgPath + "/" + isCategoryEdit?.category_image // check db
-                                
                             }
                             alt="category photo"
                             className={`group-hover:opacity-30 duration-200 relative object-cover h-full w-full  m-auto `}
@@ -145,8 +144,8 @@ const ModalAddCategory = ({ isCategoryEdit, setIsCategoryEdit }) => {
                     </div>
                     <div className="form-action flex p-4 justify-end gap-5">
                       <button className="btn btn-accent" type="submit">
-                        <SpinnerButton />
-                        Save
+                        {mutation.isPending ? <SpinnerButton /> : "save"}
+                        
                       </button>
                       <button
                         className="btn btn-cancel"

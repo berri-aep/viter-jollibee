@@ -33,9 +33,8 @@ const AdvertisementTable = () => {
   return (
     <>
       <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
-        {/* <SpinnerTable /> */}
+        {/* {isFetching && !isLoading && <SpinnerTable />} */}
         <div className="table-wrapper custom-scroll">
-          {/* <TableLoader count={20} cols={5} /> */}
           <table>
             <thead>
               <tr>
@@ -46,74 +45,84 @@ const AdvertisementTable = () => {
               </tr>
             </thead>
             <tbody>
-              {/* <tr>
-              <td colSpan={100}>
-                <IconNoData />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={100}>
-                <IconServerError />
-              </td>
-            </tr> */}
+              {/* {isLoading && (
+                <tr>
+                  <td colSpan={100}>
+                    <TableLoader count={20} cols={3} />
+                  </td>
+                </tr>
+              )}
+              {result?.count === 0 && (
+                <tr>
+                  <td colSpan={100}>
+                    <IconNoData />
+                  </td>
+                </tr>
+              )}
+              {error && (
+                <tr>
+                  <td colSpan={100}>
+                    <IconServerError />
+                  </td>
+                </tr>
+              )} */}
 
-              {Array.from(Array(6).keys()).map((i)=>(
-
-              <tr key={i}>
-                <td>{counter++}.</td>
-                <td>
-                  <Pills />
-                </td>
-                <td>Advertisement1</td>
-                <td>
-                  <ul className="table-action">
-                    {true ? (
-                      <>
-                        <li>
-                          <button
-                            className="tooltip"
-                            data-tooltip="Edit"
-                            onClick={() => handleEdit()}
-                          >
-                            <FilePenLine />
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="tooltip"
-                            data-tooltip="Archive"
-                            onClick={handleArchive}
-                          >
-                            <Archive />
-                          </button>
-                        </li>
-                      </>
-                    ) : (
-                      <>
-                        <li>
-                          <button className="tooltip" data-tooltip="Restore">
-                            <ArchiveRestore onClick={() => handleRestore()} />
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="tooltip"
-                            data-tooltip="Delete"
-                            onClick={handleDelete}
-                          >
-                            <Trash2 />
-                          </button>
-                        </li>
-                      </>
-                    )}
-                  </ul>
-                </td>
-              </tr>
+              {Array.from(Array(6).keys()).map((i) => (
+                <tr key={i}>
+                  <td>{counter++}.</td>
+                  <td>
+                    <Pills />
+                  </td>
+                  <td>Advertisement1</td>
+                  <td>
+                    <ul className="table-action">
+                      {true ? (
+                        <>
+                          <li>
+                            <button
+                              className="tooltip"
+                              data-tooltip="Edit"
+                              onClick={() => handleEdit()}
+                            >
+                              <FilePenLine />
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              className="tooltip"
+                              data-tooltip="Archive"
+                              onClick={handleArchive}
+                            >
+                              <Archive />
+                            </button>
+                          </li>
+                        </>
+                      ) : (
+                        <>
+                          <li>
+                            <button className="tooltip" data-tooltip="Restore">
+                              <ArchiveRestore onClick={() => handleRestore()} />
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              className="tooltip"
+                              data-tooltip="Delete"
+                              onClick={handleDelete}
+                            >
+                              <Trash2 />
+                            </button>
+                          </li>
+                        </>
+                      )}
+                    </ul>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
 
-          <LoadMore />
+          {/* <LoadMore /> */}
         </div>
       </div>
 
