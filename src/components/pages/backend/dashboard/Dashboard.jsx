@@ -8,6 +8,10 @@ import Header from "../partials/Header";
 import SideNavigation from "../partials/SideNavigation";
 import DashboardAccordion from "./DashboardAccordion";
 import DashboardCard from "./DashboardCard";
+import useQueryData from "@/components/custom-hook/useQueryData";
+import TableLoader from "../partials/TableLoader";
+import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import IconNoData from "../partials/IconNoData";
 
 const Dashboard = () => {
   const { dispatch, store } = React.useContext(StoreContext);
@@ -16,6 +20,26 @@ const Dashboard = () => {
     dispatch(setIsAdd(true));
     setItemEdit(null);
   };
+  const {
+    isLoading: isLaodingCategory,
+    isFetching: isFetchingCategory,
+    error: errorCategory,
+    data: dataCategory,
+  } = useQueryData(
+    `/v2/category`, // endpoint
+    "get", // method
+    "category"
+  );
+  const {
+    isLoading: isLaodingFood,
+    isFetching: isFetchingFood,
+    error: errorFood,
+    data: dataFood,
+  } = useQueryData(
+    `/v2/food`, //endpoint
+    "get", //method
+    "food" //key
+  );
   return (
     <>
       <section className="layout-main">
@@ -23,24 +47,11 @@ const Dashboard = () => {
           <SideNavigation menu="dashboard" />
           <main>
             <Header title="Dashboard" subtitle="Welcome to Jollibee" />
-            <div className="p-5">
+            <div className="p-5 overflow-y-auto custom-scroll">
               <div className="grid grid-cols-[1fr_400px] gap-5">
                 <div className="stats">
-                  <div className="grid grid-cols-4 gap-5">
-                    <DashboardCard title="Chicken Joy" filterby="Chickenjoy" />
-                    <DashboardCard title="Value Meal" filterby="Value Meal" />
-                    <DashboardCard title="Dessert" filterby="Desserts" />
-                    <DashboardCard title="Spaghetti" filterby="Spaghetti" />
-                    <DashboardCard title="Sides" filterby="Sides" />
-                    <DashboardCard
-                      title="Burger Steak"
-                      filterby="Burger Steak"
-                    />
-                    <DashboardCard title="Burger" filterby="Burger" />
-                    <DashboardCard title="Palabok" filterby="Palabok" />
-                  </div>
-                  <div className="chart mt-5">
-                    <ResponsiveContainer width={"100%"} height={440}>
+                  <div className="chart mt-2 pb-20">
+                    <ResponsiveContainer width={"100%"} height={340}>
                       <h3>Menu Prices</h3>
                       <BarChart
                         width={200}
@@ -65,6 +76,22 @@ const Dashboard = () => {
                         />
                       </BarChart>
                     </ResponsiveContainer>
+                  </div>
+                  <div className="relative">
+                    {isFetchingCategory && !isLaodingCategory && (<FetchingSpinner/>)}
+                  { isLaodingCategory && <TableLoader cols={4} count={20} />}
+                  {dataCategory?.count === 0 && <IconNoData/> }
+                    <div className="grid grid-cols-4 gap-5 mt-2 custom-scroll overflow-y-auto  h-[calc(100vh-600px)]">
+                      {dataCategory?.data.map((item, key) => {
+                        return (
+                          <DashboardCard
+                            item={item}
+                            key={key}
+                            dataFood={dataFood}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
                 <div className="sidebar custom-scroll overflow-auto h-[calc(100vh-160px)]">

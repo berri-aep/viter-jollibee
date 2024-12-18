@@ -7,35 +7,36 @@ require 'functions.php';
 // use needed classes
 require '../../models/foods/Food.php';
 
-
 // check database connection
 $conn = null;
 $conn = checkDbConnection();
+// get payload
+$body = file_get_contents("php://input");
+$data = json_decode($body, true);
 // make instance of classes
 $food = new Food($conn);
 $response = new Response();
 // validate api key
 if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
     checkApiKey();
+    checkPayload($data);
 
-    if (array_key_exists("start", $_GET)) {
-        // get data
-        // get task id from query string
-        $food->food_start = $_GET['start'];
-        $food->food_total = 5;
-        //check to see if task id in query string is not empty and is number, if not return json error
-        checkLimitId($food->food_start, $food->food_total);
+    $food->food_search = $data['searchValue'];
 
-        $query = checkReadLimit($food);
-        $total_result = checkReadAll($food);
-        http_response_code(200);
-        checkReadQuery(
-            $query,
-            $total_result,
-            $food->food_total,
-            $food->food_start
-        );
+    http_response_code(200);
+    if($data['isFilter']){
+        $food->food_is_active = checkIndex($data , 'statusFilter');
+        if($food->food_search != ''){
+            $query = checkFilterActiveSearch($food);
+            getQueriedData($query);
+        }
+        $query = checkFilterActive($food);
+        getQueriedData($query);
     }
+
+    $query = checkSearch($food);
+    getQueriedData($query);
+
     // return 404 error if endpoint not available
     checkEndpoint();
 }

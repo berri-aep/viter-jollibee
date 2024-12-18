@@ -1,11 +1,13 @@
-import React from "react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+import useQueryData from "@/components/custom-hook/useQueryData";
 import { imgPath } from "@/components/helpers/functions-general";
+import ServerError from "@/components/partials/ServerError";
+import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 
-const SliderBanner = () => {
-  var settings = {
+const SliderBanner = ({ isLoadingAdv, isFetchingAdv, errorAdv, dataAdv }) => {
+  const settings = {
     dots: false,
     infinite: true,
     slidesToShow: 1,
@@ -14,24 +16,36 @@ const SliderBanner = () => {
     speed: 2500,
     autoplaySpeed: 500,
   };
+  const {
+    isLoading,
+    isFetching,
+    error,
+    data: result,
+  } = useQueryData(
+    `/v2/adv`, // endpoint
+    "get", // method
+    "adv"
+  );
   return (
-    <Slider {...settings}>
-      <img
-        src={`${imgPath}/slider-1.jpg`}
-        alt=""
-        className="h-[200px] object-cover w-full"
-      />
-      <img
-        src={`${imgPath}/slider-2.png`}
-        alt=""
-        className="h-[200px] object-cover w-full"
-      />
-      <img
-        src={`${imgPath}/slider-3.jpg`}
-        alt=""
-        className="h-[200px] object-cover w-full"
-      />
-    </Slider>
+    <>
+      <div className="relative h-[200px]">
+        {(isFetchingAdv || isLoadingAdv) && <FetchingSpinner />}
+        {errorAdv && <ServerError />}
+        <Slider {...settings}>
+          {dataAdv?.count > 0 &&
+            dataAdv?.data.map((item, key) => {
+              return (
+                <img
+                  key={key}
+                  src={`${imgPath}/${item.adv_image}`}
+                  alt=""
+                  className="h-[200px] object-cover object-center"
+                />
+              );
+            })}
+        </Slider>
+      </div>
+    </>
   );
 };
 

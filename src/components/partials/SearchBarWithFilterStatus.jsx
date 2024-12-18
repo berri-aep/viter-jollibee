@@ -14,12 +14,14 @@ const SearchBarWithFilterStatus = ({
   statusFilter,
   setStatusFilter,
   setIsFilter,
+
 }) => {
   const handleChange = (e) => {
     if (e.target.value === "") {
       setOnSearch(!onSearch);
       dispatch(setIsSearch(false));
     }
+    
   };
 
   const handleSubmit = (e) => {
@@ -38,10 +40,12 @@ const SearchBarWithFilterStatus = ({
   };
 
   const handleChangeStatus = (e, setStatusFilter) => {
+    search.current.value = "";
     setStatusFilter(e.target.value);
     setIsFilter(false);
     if(e.target.value !== ""){
       setIsFilter(true);
+      dispatch(setIsSearch(false))
     }
   };
 

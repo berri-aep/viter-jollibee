@@ -14,8 +14,10 @@ import ModalValidation from '../partials/Modals/ModalValidation';
 
 const Advertisement = () => {
 const { dispatch, store } = React.useContext(StoreContext);
+const [ itemEdit, setItemEdit ] = React.useState(null);
 const handleAdd = () => {
   dispatch(setIsAdd(true));
+  setItemEdit(null)
 };
   return (
     <>
@@ -34,7 +36,7 @@ const handleAdd = () => {
                   <Plus size={16} /> Add New
                 </button>
               </div>
-              <AdvertisementTable />
+              <AdvertisementTable setItemEdit={setItemEdit}/>
             </div>
 
             <Footer />
@@ -44,7 +46,7 @@ const handleAdd = () => {
       {store.validate && <ModalValidation />}
       {store.error && <ModalError />}
       {store.success && <ToastSuccess />}
-      {store.isAdd && <ModalAddAdvertisement />}
+      {store.isAdd && <ModalAddAdvertisement itemEdit={itemEdit} />}
     </>
   );
 }

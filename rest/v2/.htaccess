@@ -23,4 +23,11 @@ RewriteRule ^food/active/([0-9]+)$ controllers/food/active.php?foodid=$1 [L]
 RewriteRule ^food/page/([0-9]+)$ controllers/food/page.php?start=$1 [L]
 RewriteRule ^food/search$ controllers/food/search.php [L]
 RewriteRule ^food/read-food-by-category$ controllers/food/read-food-by-category.php [L]
+
+RewriteRule ^adv$ controllers/adv/adv.php [L]
+RewriteRule ^adv/([0-9]+)$ controllers/adv/adv.php?advid=$1 [L]
+RewriteRule ^adv/active/([0-9]+)$ controllers/adv/active.php?advid=$1 [L]
+RewriteRule ^adv/page/([0-9]+)$ controllers/adv/page.php?start=$1 [L]
+RewriteRule ^adv/search$ controllers/adv/search.php [L]
+RewriteRule ^adv/read-all-active-adv$ controllers/adv/read-all-active-adv.php [L]
             

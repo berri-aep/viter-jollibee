@@ -13,37 +13,53 @@ const Order = () => {
   const [showCart, setShowCart] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
 
-    const {
-      isLoading,
-      isFetching,
-      error,
-      data: result,
-      status,
-    } = useQueryData(
-      `/v2/category`, //endpoint
-      "get", //method
-      "category" //key
-   );
+  const {
+    isLoading,
+    isFetching,
+    error,
+    data: result,
+  } = useQueryData(
+    `/v2/category`, //endpoint
+    "get", //method
+    "category" //key
+  );
 
-   const getCategoryName = (categoryId, categoryResult) => {
-    let categorySelectName = '';
+  const {
+    isLoading: isLoadingAdv,
+    isFetching: isFetchingAdv,
+    error: errorAdv,
+    data: dataAdv,
+  } = useQueryData(
+    `/v2/adv/read-all-active-adv`, //endpoint
+    "get", //method
+    "adv/read-all-active-adv" //key
+  );
 
-    categoryResult?.data.map((item)=>{
-      if(Number(categoryId) === Number(item.category_aid)){
+  const getCategoryName = (categoryId, categoryResult) => {
+    let categorySelectName = "";
+
+    categoryResult?.data.map((item) => {
+      if (Number(categoryId) === Number(item.category_aid)) {
         categorySelectName = item.category_title;
       }
-   });
-   return categorySelectName;
-};
-   const categoryName = categoryId === "" ? "value meal" : getCategoryName(categoryId, result);
+    });
+    return categorySelectName;
+  };
+  const categoryName =
+    categoryId === "" ? "value meal" : getCategoryName(categoryId, result);
 
   const getTotal = cartData.reduce((acc, item) => {
     return acc + item.food_price * item.quantity;
-  },0)
+  }, 0);
 
   return (
     <>
-      <SliderBanner />
+      <SliderBanner
+        isLoadingAdv={isLoadingAdv}
+        isFetchingAdv={isFetchingAdv}
+        errorAdv={errorAdv}
+        dataAdv={dataAdv}
+      />
 
       <div className="grid grid-rows-[auto_,1fr_,auto] min-h-[calc(100vh-200px)]">
         <MenuTitle categoryName={categoryName} />

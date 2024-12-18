@@ -76,7 +76,7 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["caregory", onSearch, isFilter, statusFilter],
+    queryKey: ["category", onSearch, isFilter, statusFilter],
     queryFn: async ({ pageParam = 1 }) =>
       await queryDataInfinite(
         "/v2/category/search", // search or filter endpoint
@@ -91,7 +91,7 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
       ),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.total) {
-        return lastPage.page + lastPage.count;
+        return lastPage.page + lastPage.count;``
       }
       return;
     },
@@ -217,123 +217,11 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
                             )}
                           </div>
                         </td>
-                        {/* <td>
-                          <ul className="table-action">
-                            {item.category_is_active ? (
-                              <>
-                                <li>
-                                  <button
-                                    className="tooltip"
-                                    data-tooltip="Edit"
-                                    onClick={() => handleEdit(item)}
-                                  >
-                                    <FilePenLine />
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    className="tooltip"
-                                    data-tooltip="Archive"
-                                    onClick={() => handleArchive(item)}
-                                  >
-                                    <Archive />
-                                  </button>
-                                </li>
-                              </>
-                            ) : (
-                              <>
-                                <li>
-                                  <button
-                                    className="tooltip"
-                                    data-tooltip="Restore"
-                                  >
-                                    <ArchiveRestore
-                                      onClick={() => handleRestore(item)}
-                                    />
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    className="tooltip"
-                                    data-tooltip="Delete"
-                                    onClick={() => handleDelete(item)}
-                                  >
-                                    <Trash2 />
-                                  </button>
-                                </li>
-                              </>
-                            )}
-                          </ul>
-                        </td> */}
                       </tr>
                     );
                   })}
                 </React.Fragment>
               ))}
-
-              {/* {result?.count > 0 &&
-                result.data.map((item, key) => (
-                  <tr key={key}>
-                    <td>{counter++}.</td>
-                    <td>
-                      {item.category_is_active === 1 ? (
-                        <Pills text="Active" />
-                      ) : (
-                        <Pills text="inActive" />
-                      )}
-                    </td>
-                    <td>{item.category_title}</td>
-                    <td>{item.category_image}</td>
-                    <td>
-                      <ul className="table-action">
-                        {item.category_is_active === 1 ? (
-                          <>
-                            <li>
-                              <button
-                                className="tooltip"
-                                data-tooltip="Edit"
-                                onClick={() => handleEdit(item)}
-                              >
-                                <FilePenLine />
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="tooltip"
-                                data-tooltip="Archive"
-                                onClick={() => handleArchive(item)}
-                              >
-                                <Archive />
-                              </button>
-                            </li>
-                          </>
-                        ) : (
-                          <>
-                            <li>
-                              <button
-                                className="tooltip"
-                                data-tooltip="Restore"
-                              >
-                                <ArchiveRestore
-                                  onClick={() => handleRestore(item)}
-                                />
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="tooltip"
-                                data-tooltip="Delete"
-                                onClick={() => handleDelete(item)}
-                              >
-                                <Trash2 />
-                              </button>
-                            </li>
-                          </>
-                        )}
-                      </ul>
-                    </td>
-                  </tr>
-                ))} */}
             </tbody>
           </table>
             <div className="pb-10 flex items-center justify-center text-white">
