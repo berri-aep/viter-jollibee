@@ -13,7 +13,7 @@ import { StoreContext } from "@/components/store/storeContext";
 import ModalWrapper from "@/components/pages/backend/partials/Modals/ModalWrapper";
 import { Archive, X } from "lucide-react";
 import SpinnerButton from "@/components/pages/backend/partials/spinners/SpinnerButton";
-import { setMessage, setSuccess } from "@/components/store/storeAction";
+import { setError, setMessage, setSuccess } from "@/components/store/storeAction";
 
 const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext
