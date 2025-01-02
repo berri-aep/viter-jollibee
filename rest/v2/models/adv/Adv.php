@@ -22,7 +22,7 @@ class Adv
     public function __construct($db)
     {
         $this->connection = $db;
-        $this->tblAdv = "jollibee_adv";
+        $this->tblAdv = "jollibee_advv";
     }
 
 

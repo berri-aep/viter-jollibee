@@ -31,8 +31,8 @@ class Food
   public function __construct($db)
   {
     $this->connection = $db;
-    $this->tblCategory = "jollibee_category";
-    $this->tblFood = "jollibee_food";
+    $this->tblCategory = "jollibee_categoryy";
+    $this->tblFood = "jollibee_foodd";
   }
 
 

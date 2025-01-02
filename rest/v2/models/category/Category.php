@@ -22,7 +22,7 @@ class Category
   public function __construct($db)
   {
     $this->connection = $db;
-    $this->tblCategory = "jollibee_category";
+    $this->tblCategory = "jollibee_categoryy";
   }
 
 

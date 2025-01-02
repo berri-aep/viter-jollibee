@@ -1,110 +1,97 @@
+import useQueryData from "@/components/custom-hook/useQueryData";
+import ModalArchive from "@/components/partials/modal/ModalArchive";
+import ModalDelete from "@/components/partials/modal/ModalDelete";
+import ModalRestore from "@/components/partials/modal/ModalRestore";
+import { StoreContext } from "@/components/store/storeContext";
+import React from "react";
+import Pills from "../../partials/Pills";
+import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
+import LoadMore from "../../partials/LoadMore";
+import SpinnerTable from "../../partials/spinners/SpinnerTable";
+import TableLoader from "../../partials/TableLoader";
+import IconNoData from "../../partials/IconNoData";
+import IconServerError from "../../partials/IconServerError";
 import {
   setIsAdd,
   setIsArchive,
   setIsDelete,
   setIsRestore,
 } from "@/components/store/storeAction";
-
-import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
-import React from "react";
-import LoadMore from "../partials/LoadMore";
-import ModalConfirm from "../partials/Modals/ModalConfirm";
-import Pills from "../partials/Pills";
-import { StoreContext } from "@/components/store/storeContext";
-import useQueryData from "@/components/custom-hook/useQueryData";
-import Status from "@/components/partials/Status";
-import ModalRestore from "@/components/partials/modal/ModalRestore";
-import ModalArchive from "@/components/partials/modal/ModalArchive";
-import ModalDelete from "@/components/partials/modal/ModalDelete";
+import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
-import IconServerError from "../partials/IconServerError";
-import IconNoData from "../partials/IconNoData";
-import TableLoader from "../partials/TableLoader";
-import SpinnerTable from "../partials/spinners/SpinnerTable";
-import { useInView } from "react-intersection-observer";
-import SearchBar from "@/components/partials/SearchBar";
-import { FaArchive, FaEdit, FaTrash, FaTrashRestoreAlt } from "react-icons/fa";
 import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
+import Status from "@/components/partials/Status";
+import { FaArchive, FaTrashRestoreAlt } from "react-icons/fa";
 
-const CategoryTable = ({ setIsCategoryEdit }) => {
-  const [id, setIsId] = React.useState("");
+const DeveloperList = () => {
   const { store, dispatch } = React.useContext(StoreContext);
-  const [isFilter, setIsFilter] = React.useState(false);
-  const [onSearch, setOnSearch] = React.useState(false);
-  const [statusFilter, setStatusFilter] = React.useState("");
-  const search = React.useRef({ value: "" });
-  const [page, setPage] = React.useState(1);
-  const { ref, inView } = useInView();
+  const [id, setIsId] = React.useState("");
+  const [dataItem, setDataItem] = React.useState(null);
+    const [isFilter, setIsFilter] = React.useState(false);
+    const [onSearch, setOnSearch] = React.useState(false);
+    const [statusFilter, setStatusFilter] = React.useState("");
+    const search = React.useRef({ value: "" });
+    const [page, setPage] = React.useState(1);
+    const { ref, inView } = useInView();
   let counter = 1;
 
   const handleDelete = (item) => {
     dispatch(setIsDelete(true));
-    setIsId(item.category_aid);
+    setIsId(item.user_developer_aid);
+    setDataItem(item);
   };
   const handleEdit = (item) => {
     dispatch(setIsAdd(true));
-    setIsCategoryEdit(item);
+    setItemEdit(item);
   };
   const handleRestore = (item) => {
     dispatch(setIsRestore(true));
-    setIsId(item.category_aid);
+    setIsId(item.user_developer_aid);
   };
   const handleArchive = (item) => {
     dispatch(setIsArchive(true));
-    setIsId(item.category_aid);
+    setIsId(item.user_developer_aid);
   };
 
-  // const {
-  //   isLoading,
-  //   isFetching,
-  //   error,
-  //   data: result,
-  //   status,
-  // } = useQueryData(
-  //   `/v2/category`, //endpoint
-  //   "get", //method
-  //   "category" //key
-  // );
+    const {
+      data: result,
+      error,
+      fetchNextPage,
+      hasNextPage,
+      isFetching,
+      isFetchingNextPage,
+      status,
+    } = useInfiniteQuery({
+      queryKey: ["developer", onSearch, isFilter, statusFilter],
+      queryFn: async ({ pageParam = 1 }) =>
+        await queryDataInfinite(
+          "/v2/developer/search", // search or filter endpoint
+          `/v2/developer/page/${pageParam}`, //page api/endpoint
+          isFilter || store.isSearch, //search boolean
+          {
+            isFilter,
+            statusFilter,
+            searchValue: search?.current.value,
+            id: "",
+          } // payload
+        ),
+      getNextPageParam: (lastPage) => {
+        if (lastPage.page < lastPage.total) {
+          return lastPage.page + lastPage.count;
+          ``;
+        }
+        return;
+      },
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: result,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isLoading,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["category", onSearch, isFilter, statusFilter],
-    queryFn: async ({ pageParam = 1 }) =>
-      await queryDataInfinite(
-        "/v2/category/search", // search or filter endpoint
-        `/v2/category/page/${pageParam}`, //page api/endpoint
-        isFilter || store.isSearch, //search boolean
-        {
-          isFilter,
-          statusFilter,
-          searchValue: search?.current.value,
-          id: "",
-        } // payload
-      ),
-    getNextPageParam: (lastPage) => {
-      if (lastPage.page < lastPage.total) {
-        return lastPage.page + lastPage.count;``
+    React.useEffect(() => {
+      if (inView) {
+        setPage((prev) => prev + 1);
+        fetchNextPage();
       }
-      return;
-    },
-    refetchOnWindowFocus: false,
-  });
-
-  React.useEffect(() => {
-    if (inView) {
-      setPage((prev) => prev + 1);
-      fetchNextPage();
-    }
-  }, [inView]);
+    }, [inView]);
   return (
     <>
       <div>
@@ -129,7 +116,8 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
               <tr>
                 <th>#</th>
                 <th>Status</th>
-                <th>Title</th>
+                <th>Name</th>
+                <th>Email</th>
                 <th></th>
               </tr>
             </thead>
@@ -161,19 +149,19 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
                       <tr key={key} className="group relative cursor-pointer">
                         <td className="text-center">{counter++}</td>
                         <td>
-                          {item.category_is_active === 1 ? (
+                          {item.user_developer_is_active === 1 ? (
                             <Status text="Active" />
                           ) : (
                             <Status text="inActive" />
                           )}
                         </td>
-                        <td>{item.category_title}</td>
+                        <td>{item.user_developer_email}</td>
                         <td
                           colSpan={100}
                           className="opacity-0 group-hover:opacity-100"
                         >
                           <div className="flex items-center justify-end gap-2 mr-5">
-                            {item.category_is_active == 1 ? (
+                            {item.user_developer_is_active == 1 ? (
                               <>
                                 <button
                                   type="button"
@@ -225,44 +213,35 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
               ))}
             </tbody>
           </table>
-            <div className="pb-10 flex items-center justify-center text-white">
 
-          <LoadMore
-            fetchNextPage={fetchNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            hasNextPage={hasNextPage}
-            result={result?.pages[0]}
-            setPage={setPage}
-            page={page}
-            refView={ref}
-          />
-            </div>
+          <LoadMore />
         </div>
       </div>
 
       {store.isDelete && (
         <ModalDelete
           setIsDelete={setIsDelete}
-          mysqlApiDelete={`/v2/category/${id}`}
-          queryKey={"category"}
+          mysqlApiDelete={`/v2/developer/${id}`}
+          queryKey={"developer"}
+          item={dataItem.developer_name}
         />
       )}
       {store.isRestore && (
         <ModalRestore
           setIsRestore={setIsRestore}
-          mysqlEndpoint={`/v2/category/active/${id}`}
-          queryKey={"category"}
+          mysqlEndpoint={`/v2/developer/active/${id}`}
+          queryKey={"developer"}
         />
       )}
       {store.isArchive && (
         <ModalArchive
           setIsArchive={setIsArchive}
-          mysqlEndpoint={`/v2/category/active/${id}`}
-          queryKey={"category"}
+          mysqlEndpoint={`/v2/developer/active/${id}`}
+          queryKey={"developer"}
         />
       )}
     </>
   );
 };
 
-export default CategoryTable;
+export default DeveloperList;

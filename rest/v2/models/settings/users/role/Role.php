@@ -20,7 +20,7 @@ class Role
     public function __construct($db)
     {
         $this->connection = $db;
-        $this->tblRole = "jollibee_settings_role";
+        $this->tblRole = "jollibee_settings_rolee";
         
     }
 
