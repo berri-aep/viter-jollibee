@@ -1,3 +1,4 @@
+import DeveloperProtectedRoute from "@/components/pages/backend/access/DeveloperProtectedRoute";
 import Advertisement from "@/components/pages/backend/advertisement/Advertisement";
 import Category from "@/components/pages/backend/category/Category";
 import Dashboard from "@/components/pages/backend/dashboard/Dashboard";
@@ -9,6 +10,14 @@ import Settings from "@/components/pages/backend/settings/Settings";
 import User from "@/components/pages/backend/settings/user/User";
 
 export const routeDeveloper = [
+  {
+    route: `/developer/`,
+    element: (
+      <DeveloperProtectedRoute>
+        <Developer />
+      </DeveloperProtectedRoute>
+    ),
+  },
   {
     route: `/developer/dashboard`,
     element: <Dashboard />,
@@ -33,9 +42,14 @@ export const routeDeveloper = [
     route: `/developer/settings/role`,
     element: <Role />,
   },
+
   {
     route: `/developer/settings/developer`,
-    element: <Developer/>,
+    element: (
+      <DeveloperProtectedRoute>
+        <Developer />
+      </DeveloperProtectedRoute>
+    ),
   },
   {
     route: `/developer/settings/users`,

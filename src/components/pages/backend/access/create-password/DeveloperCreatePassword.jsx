@@ -14,14 +14,19 @@ import { Form, Formik } from "formik";
 import * as Yup from "Yup";
 import { InputText } from "@/components/helpers/FormInputs";
 import useQueryData from "@/components/custom-hook/useQueryData";
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { queryData } from "@/components/helpers/queryData";
 import { StoreContext } from "@/components/store/storeContext";
 import { setError, setMessage } from "@/components/store/storeAction";
 import SpinnerButton from "../../partials/spinners/SpinnerButton";
+import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
 
 const DeveloperCreatePassword = () => {
-    const { dispatch, store } = React.useContext(StoreContext);
+  const { dispatch, store } = React.useContext(StoreContext);
   const [theme, setTheme] = React.useState(localStorage.getItem("theme"));
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -34,26 +39,35 @@ const DeveloperCreatePassword = () => {
   const [numberValidated, setNumberValidated] = React.useState(false);
   const [specialValidated, setSpecialValidated] = React.useState(false);
   const [lengthValidated, setLengthValidated] = React.useState(false);
-  const paramKey = getUrlParam().get("key")
+  const paramKey = getUrlParam().get("key");
   const queryClient = useQueryClient();
-  const{isLoading, data: key} = useQueryData(`/v2/developer/key/${paramKey}`, "get", "developer/key");
+  const { isLoading, data: key } = useQueryData(
+    `/v2/developer/key/${paramKey}`,
+    "get",
+    "developer/key"
+  );
 
-  const mutation = useMutation({mutationFn: (values) => queryData(`/v2/developer`, "post", values), onSuccess: (data) =>{
-    queryClient.invalidateQueries({queries:["developer"]});
-    if(!data.succes){
+  const mutation = useMutation({
+    mutationFn: (values) => queryData(`/v2/developer/password`, "post", values),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queries: ["developer"] });
+      if (!data.success) {
         dispatch(setError(true));
         dispatch(setMessage(data.error));
-    } else {
-        if(store.isCreatePassSucces){
-            dispatch(setCreatePassSucces(false));
-            Navigate(`${devNavUrl}/create-password-success?redirect=/developer/login`);
-        }
-    }
-  }})
+      } else {
+        // if(store.isCreatePassSucces){
+        //     dispatch(setCreatePassSucces(false));
+        //     Navigate(`${devNavUrl}/create-password-success?redirect=/developer/login`);
+        // }
+        setSucces(true);
+      }
+    },
+  });
 
   const initVal = {
     new_password: "",
     confirm_password: "",
+    key: paramKey,
   };
   const yupSchema = Yup.object({
     new_password: Yup.string()
@@ -146,12 +160,16 @@ const DeveloperCreatePassword = () => {
               Back To Login
             </Link>
           </div>
+        ) : isLoading ? (
+          <FetchingSpinner />
+        ) : key?.count === 0 || paramKey === null || paramKey === "" ? (
+          "invalid page"
         ) : (
           <Formik
             initialValues={initVal}
             validationSchema={yupSchema}
             onSubmit={async (values) => {
-              console.log(values);
+              mutation.mutate(values);
             }}
           >
             {(props) => {
@@ -274,10 +292,15 @@ const DeveloperCreatePassword = () => {
                   </ul>
                   <button
                     className="btn btn-accent w-full center-all mt-5"
-                    onClick={() => setSucces(true)}
+                    // onClick={() => setSucces(true)}
+                    disabled={
+                      mutation.isPending ||
+                      props.values.new_password === "" ||
+                      props.values.confirm_password === ""
+                    }
                     type="submit"
                   >
-                    <SpinnerButton /> Set Password
+                    {mutation.isPending ? <SpinnerButton /> : "Set Password"}
                   </button>
                 </Form>
               );

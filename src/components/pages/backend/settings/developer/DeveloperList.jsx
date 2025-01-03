@@ -22,18 +22,18 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
 import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
 import Status from "@/components/partials/Status";
-import { FaArchive, FaTrashRestoreAlt } from "react-icons/fa";
+import { FaArchive, FaEdit, FaTrash, FaTrashRestoreAlt } from "react-icons/fa";
 
-const DeveloperList = () => {
+const DeveloperList = ({ setItemEdit }) => {
   const { store, dispatch } = React.useContext(StoreContext);
   const [id, setIsId] = React.useState("");
   const [dataItem, setDataItem] = React.useState(null);
-    const [isFilter, setIsFilter] = React.useState(false);
-    const [onSearch, setOnSearch] = React.useState(false);
-    const [statusFilter, setStatusFilter] = React.useState("");
-    const search = React.useRef({ value: "" });
-    const [page, setPage] = React.useState(1);
-    const { ref, inView } = useInView();
+  const [isFilter, setIsFilter] = React.useState(false);
+  const [onSearch, setOnSearch] = React.useState(false);
+  const [statusFilter, setStatusFilter] = React.useState("");
+  const search = React.useRef({ value: "" });
+  const [page, setPage] = React.useState(1);
+  const { ref, inView } = useInView();
   let counter = 1;
 
   const handleDelete = (item) => {
@@ -54,44 +54,44 @@ const DeveloperList = () => {
     setIsId(item.user_developer_aid);
   };
 
-    const {
-      data: result,
-      error,
-      fetchNextPage,
-      hasNextPage,
-      isFetching,
-      isFetchingNextPage,
-      status,
-    } = useInfiniteQuery({
-      queryKey: ["developer", onSearch, isFilter, statusFilter],
-      queryFn: async ({ pageParam = 1 }) =>
-        await queryDataInfinite(
-          "/v2/developer/search", // search or filter endpoint
-          `/v2/developer/page/${pageParam}`, //page api/endpoint
-          isFilter || store.isSearch, //search boolean
-          {
-            isFilter,
-            statusFilter,
-            searchValue: search?.current.value,
-            id: "",
-          } // payload
-        ),
-      getNextPageParam: (lastPage) => {
-        if (lastPage.page < lastPage.total) {
-          return lastPage.page + lastPage.count;
-          ``;
-        }
-        return;
-      },
-      refetchOnWindowFocus: false,
-    });
-
-    React.useEffect(() => {
-      if (inView) {
-        setPage((prev) => prev + 1);
-        fetchNextPage();
+  const {
+    data: result,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["developer", onSearch, isFilter, statusFilter],
+    queryFn: async ({ pageParam = 1 }) =>
+      await queryDataInfinite(
+        "/v2/developer/search", // search or filter endpoint
+        `/v2/developer/page/${pageParam}`, //page api/endpoint
+        isFilter || store.isSearch, //search boolean
+        {
+          isFilter,
+          statusFilter,
+          searchValue: search?.current.value,
+          id: "",
+        } // payload
+      ),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.total) {
+        return lastPage.page + lastPage.count;
+        ``;
       }
-    }, [inView]);
+      return;
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  React.useEffect(() => {
+    if (inView) {
+      setPage((prev) => prev + 1);
+      fetchNextPage();
+    }
+  }, [inView]);
   return (
     <>
       <div>
@@ -154,6 +154,10 @@ const DeveloperList = () => {
                           ) : (
                             <Status text="inActive" />
                           )}
+                        </td>
+                        <td>
+                          {item.user_developer_first_name}{" "}
+                          {item.user_developer_last_name}
                         </td>
                         <td>{item.user_developer_email}</td>
                         <td
