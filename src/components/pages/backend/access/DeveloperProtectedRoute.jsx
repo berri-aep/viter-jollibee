@@ -39,7 +39,7 @@ const DeveloperProtectedRoute = ({ children }) => {
         delete login.data.role_datetime;
       }
       if (
-        !login.success 
+        !login.success
         //|| login.data.role.toLowerCase() !== login.data.role_name.toLowerCase()
       ) {
         setPageStatus(true);
@@ -63,8 +63,10 @@ const DeveloperProtectedRoute = ({ children }) => {
           <FetchingSpinner />
         ) : isAuth === "123" ? (
           children
-        ) : (
+        ) : isAuth === "456" ? (
           <Navigate to={`${devNavUrl}/developer/login`} />
+        ) : (
+          <p>End Point not found.</p>
         )}
       </>
     );
