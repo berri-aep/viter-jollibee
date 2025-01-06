@@ -1,12 +1,11 @@
 import DeveloperProtectedRoute from "@/components/pages/backend/access/DeveloperProtectedRoute";
-import Advertisement from "@/components/pages/backend/advertisement/Advertisement";
-import Category from "@/components/pages/backend/category/Category";
-import Dashboard from "@/components/pages/backend/dashboard/Dashboard";
-import Foods from "@/components/pages/backend/Foods/Foods";
+import Advertisement from "@/components/pages/backend/Developer/advertisement/Advertisement";
+import Category from "@/components/pages/backend/Developer/category/Category";
+import Dashboard from "@/components/pages/backend/Developer/dashboard/Dashboard";
+import Foods from "@/components/pages/backend/Developer/Foods/Foods";
+import Role from "@/components/pages/backend/Developer/settings/role/Role";
+import Settings from "@/components/pages/backend/Developer/settings/Settings";
 import Developer from "@/components/pages/backend/settings/developer/Developer";
-import DeveloperList from "@/components/pages/backend/settings/developer/DeveloperList";
-import Role from "@/components/pages/backend/settings/role/Role";
-import Settings from "@/components/pages/backend/settings/Settings";
 import User from "@/components/pages/backend/settings/user/User";
 
 export const routeDeveloper = [
@@ -14,33 +13,57 @@ export const routeDeveloper = [
     route: `/developer/`,
     element: (
       <DeveloperProtectedRoute>
-        <Developer />
+        <Dashboard />
       </DeveloperProtectedRoute>
     ),
   },
   {
     route: `/developer/dashboard`,
-    element: <Dashboard />,
+    element: (
+      <DeveloperProtectedRoute>
+        <Dashboard />
+      </DeveloperProtectedRoute>
+    ),
   },
   {
     route: `/developer/advertisement`,
-    element: <Advertisement />,
+    element: (
+      <DeveloperProtectedRoute>
+        <Advertisement />
+      </DeveloperProtectedRoute>
+    ),
   },
   {
     route: `/developer/category`,
-    element: <Category />,
+    element: (
+      <DeveloperProtectedRoute>
+        <Category />
+      </DeveloperProtectedRoute>
+    ),
   },
   {
     route: `/developer/foods`,
-    element: <Foods />,
+    element: (
+      <DeveloperProtectedRoute>
+        <Foods />
+      </DeveloperProtectedRoute>
+    ),
   },
   {
     route: `/developer/settings`,
-    element: <Settings />,
+    element: (
+      <DeveloperProtectedRoute>
+        <Settings />
+      </DeveloperProtectedRoute>
+    ),
   },
   {
     route: `/developer/settings/role`,
-    element: <Role />,
+    element: (
+      <DeveloperProtectedRoute>
+        <Role/>
+      </DeveloperProtectedRoute>
+    ),
   },
 
   {
